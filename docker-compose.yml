@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: customs
+    ports:          # makes DB visible on localhost:5432 (optional)
+      - "5432:5432"
+
+  api:
+    build: .        # uses the Dockerfile in this folder
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/customs
+    volumes:
+      - .:/code     # hot-reload when you edit source files
+    ports:
+      - "8000:8000" # API at localhost:8000
+    depends_on:
+      - db
